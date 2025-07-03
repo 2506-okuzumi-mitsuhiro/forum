@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>TOP</title>
+</head>
+<body>
+<div class="header-contents">
+    <h1>匿名掲示板</h1>
+</div>
+<div class="main-contents">
+    <a href="/new">
+        <button class="new-button" type="button">新規投稿</button>
+    </a>
+    <div class="message-icon" th:each="content : ${contents}">
+        <div>
+            ID : <span th:text="${content.id}"/>
+        </div>
+        <div class="text">
+            投稿 : <span th:text="${content.content}"/>
+        </div>
+
+        <!-- 07_追加実装課題　1. 投稿削除機能　-->
+        <div class="delete-button">
+            <form th:action="@{/delete/{id}(id=${content.id})}" th:method="delete">
+                <input type="submit" value="削除">
+            </form>
+        </div>
+
+        <!-- 07_追加実装課題　2. 投稿編集機能　-->
+        <div class="edit-button">
+            <form th:action="@{/edit/{id}(id=${content.id})}" >
+                <input type="submit" value="編集">
+            </form>
+        </div>
+
+        <!-- 10_匿名掲⽰板の機能追加 1. 投稿へのコメント機能を追加-->
+        <div class="comment-button">
+            <form method="post" th:action="@{/comment/{id}(id=${content.id})}" th:object="${formModel}">
+                <label>返信内容</label>
+                <textarea class="tweet-box" size="20" th:field="*{content}" maxlength="200" /></textarea><br/>
+                <input type="submit" value="返信" />
+            </form>
+        </div>
+
+        <div class="comment-icon" th:each="comment : ${comments}" th:if="${content.id} eq ${comment.content_id}">
+            <div>
+                コメントID : <span th:text="${comment.id}"/>
+            </div>
+            <div class="text">
+                コメント : <span th:text="${comment.comment}"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
