@@ -17,7 +17,7 @@ public class Comment {
     private int id;
 
     @Column
-    private String content;
+    private String comment;
 
     @Column
     private int content_id;

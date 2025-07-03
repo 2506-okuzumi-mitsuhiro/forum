@@ -18,7 +18,7 @@ public class CommentService {
      * レコード全件取得処理
      */
     public List<CommentForm> findAllComment() {
-        List<Comment> results = commentRepository.findAllByOrderByIdDesc();
+        List<Comment> results = commentRepository.findAll();
         List<CommentForm> comments = setCommentForm(results);
         return comments;
     }
@@ -33,7 +33,7 @@ public class CommentService {
             CommentForm Comment = new CommentForm();
             Comment result = results.get(i);
             Comment.setId(result.getId());
-            Comment.setComment(result.getContent());
+            Comment.setComment(result.getComment());
             Comment.setContent_id(result.getContent_id());
             comments.add(Comment);
         }
@@ -54,7 +54,7 @@ public class CommentService {
     private Comment setCommentEntity(CommentForm reqComment) {
         Comment comment = new Comment();
         comment.setId(reqComment.getId());
-        comment.setContent(reqComment.getComment());
+        comment.setComment(reqComment.getComment());
         comment.setContent_id(reqComment.getContent_id());
         return comment;
     }
