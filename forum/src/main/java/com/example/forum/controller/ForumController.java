@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Controller
@@ -117,7 +118,42 @@ public class ForumController {
                                 @PathVariable("id") Integer id){
         // オブジェクトに返信対象のID情報を付与
         commentForm.setContent_id(id);
+        // オブジェクトに現在時刻の情報を付与
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        commentForm.setUpdated_date(currentTime);
         // 返信をテーブルに格納
+        commentService.saveComment(commentForm);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     * コメント編集画面表示
+     */
+    @GetMapping("/edit_comment/{id}")
+    public ModelAndView editCommentContent(@PathVariable("id") Integer id) {
+        ModelAndView mav = new ModelAndView();
+        // 対象のコメントを取得
+        CommentForm comment = commentService.findComment(id);
+        // 画面遷移先を指定
+        mav.setViewName("/edit_comment");
+        // 投稿データオブジェクトを保管
+        mav.addObject("formModel", comment);
+        return mav;
+    }
+
+    /*
+     * コメント編集処理
+     */
+    @PutMapping("/update_comment/{id}")
+    public ModelAndView updateCommentContent(@ModelAttribute("formModel") CommentForm commentForm,
+                                             @PathVariable("id") Integer id){
+        // オブジェクトにID情報を付与
+        commentForm.setId(id);
+        // 更新時刻の情報を変更
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        commentForm.setUpdated_date(currentTime);
+        // 投稿を更新
         commentService.saveComment(commentForm);
         // rootへリダイレクト
         return new ModelAndView("redirect:/");

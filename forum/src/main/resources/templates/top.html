@@ -35,7 +35,7 @@
             </form>
         </div>
 
-        <!-- 10_匿名掲⽰板の機能追加 1. 投稿へのコメント機能を追加-->
+        <!-- 10_匿名掲⽰板の機能追加 1. 投稿へのコメント機能を追加 -->
         <div class="comment-button">
             <form method="post" th:action="@{/comment/{id}(id=${content.id})}" th:object="${formModel}">
                 <label>返信内容</label>
@@ -50,6 +50,13 @@
             </div>
             <div class="text">
                 コメント : <span th:text="${comment.comment}"/>
+            </div>
+
+            <!-- 10_匿名掲⽰板の機能追加 2. コメントを編集できる機能を追加 -->
+            <div class="edit-button">
+                <form th:action="@{/edit_comment/{id}(id=${comment.id})}" >
+                    <input type="submit" value="編集">
+                </form>
             </div>
         </div>
     </div>
