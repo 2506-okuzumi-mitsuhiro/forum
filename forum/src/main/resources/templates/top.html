@@ -52,6 +52,13 @@
                 コメント : <span th:text="${comment.comment}"/>
             </div>
 
+            <!-- 10_匿名掲⽰板の機能追加 3. コメントを削除できる機能を追加 -->
+            <div class="delete-button">
+                <form th:action="@{/delete_comment/{id}(id=${comment.id})}" th:method="delete">
+                    <input type="submit" value="削除">
+                </form>
+            </div>
+
             <!-- 10_匿名掲⽰板の機能追加 2. コメントを編集できる機能を追加 -->
             <div class="edit-button">
                 <form th:action="@{/edit_comment/{id}(id=${comment.id})}" >

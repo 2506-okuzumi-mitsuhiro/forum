@@ -6,8 +6,6 @@ import com.example.forum.service.CommentService;
 import com.example.forum.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -137,7 +135,7 @@ public class ForumController {
         CommentForm comment = commentService.findComment(id);
         // 画面遷移先を指定
         mav.setViewName("/edit_comment");
-        // 投稿データオブジェクトを保管
+        // コメントデータオブジェクトを保管
         mav.addObject("formModel", comment);
         return mav;
     }
@@ -153,8 +151,19 @@ public class ForumController {
         // 更新時刻の情報を変更
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         commentForm.setUpdated_date(currentTime);
-        // 投稿を更新
+        // コメントを更新
         commentService.saveComment(commentForm);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     *  コメント削除機能処理
+     */
+    @DeleteMapping("/delete_comment/{id}")
+    public ModelAndView deleteCommentContent(@PathVariable("id") Integer id){
+        // 対象のコメントをテーブルから削除
+        commentService.deleteComment(id);
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
