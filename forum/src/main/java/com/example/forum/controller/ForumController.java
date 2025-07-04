@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -24,10 +25,24 @@ public class ForumController {
      * 投稿内容表示処理
      */
     @GetMapping
-    public ModelAndView top() {
+    public ModelAndView top(@ModelAttribute("start") String start, @ModelAttribute("end") String end) throws ParseException {
         ModelAndView mav = new ModelAndView();
-        // 投稿を全件取得
-        List<ReportForm> contentData = reportService.findAllReport();
+        List<ReportForm> contentData = null;
+
+        if (start.isBlank() && end.isBlank()){
+            // 投稿を全件取得
+            contentData = reportService.findAllReport();
+        }else {
+            contentData = reportService.findNarrowDownReport(start, end);
+
+            if(!start.isBlank()) {
+                mav.addObject("start", start);
+            }
+            if(!end.isBlank()) {
+                mav.addObject("end", end);
+            }
+        }
+
         // コメントを全件取得
         List<CommentForm> commentData = commentService.findAllComment();
         // form用の空のentity作成

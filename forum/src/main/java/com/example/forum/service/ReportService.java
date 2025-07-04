@@ -5,8 +5,13 @@ import com.example.forum.repository.ReportRepository;
 import com.example.forum.repository.entity.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,6 +27,39 @@ public class ReportService {
         List<ReportForm> reports = setReportForm(results);
         return reports;
     }
+
+    /*
+     * 指定条件レコード取得処理
+     */
+    public List<ReportForm> findNarrowDownReport(String start, String end) throws ParseException {
+        Timestamp startDate = null;
+        Timestamp endDate = null;
+        Date dateStart = null;
+        Date dateEnd = null;
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if (start.isBlank()){
+            dateStart = format.parse("2020-01-01 00:00:00");
+        }else {
+            dateStart = format.parse(start + " 00:00:00");
+        }
+
+        startDate = new Timestamp(dateStart.getTime());
+
+        if (end.isBlank()){
+            dateEnd = new Timestamp(System.currentTimeMillis());
+        }else {
+            dateEnd = format.parse(end + " 23:59:59");
+        }
+
+        endDate = new Timestamp(dateEnd.getTime());
+
+        List<Report> results = reportRepository.findAllByUpdatedDateBetweenOrderByUpdatedDateDesc(startDate, endDate);
+        List<ReportForm> reports = setReportForm(results);
+        return reports;
+    }
+
     /*
      * DBから取得したデータをFormに設定
      */

@@ -10,6 +10,14 @@
     <h1>匿名掲示板</h1>
 </div>
 <div class="main-contents">
+    <!-- 10_匿名掲⽰板の機能追加 4. ⽇付で投稿を絞り込むことができる機能を追加 -->
+    <div class="date">
+        <form action="./" method="get">
+            日付：<input type="date" name="start" th:value="${start}"> ～ <input type="date" name="end" th:value="${end}">
+            <input type="submit" value="絞込">
+        </form>
+    </div>
+
     <a href="/new">
         <button class="new-button" type="button">新規投稿</button>
     </a>
