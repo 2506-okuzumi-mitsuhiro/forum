@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Integer> {
-    public List<Report> findAllByOrderByIdDesc();
+    public List<Report> findAllByOrderByUpdatedDateDesc();
     public List<Report> findAllByUpdatedDateBetweenOrderByUpdatedDateDesc(Timestamp startDate, Timestamp endDate);
 }
 

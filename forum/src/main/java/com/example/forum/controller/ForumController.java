@@ -136,6 +136,12 @@ public class ForumController {
         commentForm.setUpdated_date(currentTime);
         // 返信をテーブルに格納
         commentService.saveComment(commentForm);
+
+        // コメント対象の投稿の更新日付を更新
+        ReportForm contentData = reportService.findReport(commentForm.getContent_id());
+        contentData.setUpdated_date(currentTime);
+        reportService.saveReport(contentData);
+
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
@@ -168,6 +174,12 @@ public class ForumController {
         commentForm.setUpdated_date(currentTime);
         // コメントを更新
         commentService.saveComment(commentForm);
+
+        // コメント対象の投稿の更新日付を更新
+        ReportForm contentData = reportService.findReport(commentForm.getContent_id());
+        contentData.setUpdated_date(currentTime);
+        reportService.saveReport(contentData);
+
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }

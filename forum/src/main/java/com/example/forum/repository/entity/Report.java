@@ -24,9 +24,8 @@ public class Report {
     @Column
     private String content;
 
-    @Column(name = "created_date", insertable = true, updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false)
     private Timestamp createdDate;
-
 
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Timestamp updatedDate;
