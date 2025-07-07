@@ -117,6 +117,9 @@ public class ForumController {
     public ModelAndView updateContent(@ModelAttribute("formModel") ReportForm reportForm, @PathVariable("id") Integer id){
         // オブジェクトにID情報を付与
         reportForm.setId(id);
+        // 更新時刻の情報を変更
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        reportForm.setUpdated_date(currentTime);
         // 投稿を更新
         reportService.saveReport(reportForm);
         // rootへリダイレクト

@@ -21,6 +21,7 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+
     @Column
     private String content;
 

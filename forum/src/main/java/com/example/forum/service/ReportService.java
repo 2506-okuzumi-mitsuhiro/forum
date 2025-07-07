@@ -91,6 +91,7 @@ public class ReportService {
         Report report = new Report();
         report.setId(reqReport.getId());
         report.setContent(reqReport.getContent());
+        report.setUpdatedDate(reqReport.getUpdated_date());
         return report;
     }
 
