@@ -6,6 +6,9 @@ import com.example.forum.service.CommentService;
 import com.example.forum.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -77,7 +80,13 @@ public class ForumController {
      * 新規投稿処理
      */
     @PostMapping("/add")
-    public ModelAndView addContent(@ModelAttribute("formModel") ReportForm reportForm){
+    public ModelAndView addContent(@ModelAttribute("formModel") @Validated ReportForm reportForm,
+                                   BindingResult result){
+        // エラー処理
+        if (result.hasErrors()){
+            return new ModelAndView("/new");
+        }
+
         // 投稿をテーブルに格納
         reportService.saveReport(reportForm);
         // rootへリダイレクト
@@ -114,7 +123,26 @@ public class ForumController {
      * 投稿編集処理
      */
     @PutMapping("/update/{id}")
-    public ModelAndView updateContent(@ModelAttribute("formModel") ReportForm reportForm, @PathVariable("id") Integer id){
+    public ModelAndView updateContent(@ModelAttribute("formModel") @Validated ReportForm reportForm,
+                                      BindingResult result, @PathVariable("id") Integer id){
+        // エラー処理
+        if (result.hasErrors()){
+            ModelAndView mav = new ModelAndView();
+            // 対象の投稿を取得
+            ReportForm contentData = reportService.findReport(id);
+            // 画面遷移先を指定
+            mav.setViewName("/edit");
+            // 投稿データオブジェクトを保管
+            mav.addObject("formModel", contentData);
+
+            StringBuilder errorMessages = new StringBuilder();
+            for (FieldError error : result.getFieldErrors()) {
+                errorMessages.append(error.getDefaultMessage());
+            }
+            mav.addObject("errorMessages", errorMessages);
+            return mav;
+        }
+
         // オブジェクトにID情報を付与
         reportForm.setId(id);
         // 更新時刻の情報を変更
@@ -130,8 +158,30 @@ public class ForumController {
      * 返信処理
      */
     @PostMapping("/comment/{id}")
-    public ModelAndView comment(@ModelAttribute("formModel") CommentForm commentForm,
-                                @PathVariable("id") Integer id){
+    public ModelAndView comment(@ModelAttribute("formModel") @Validated CommentForm commentForm,
+                                BindingResult result, @PathVariable("id") Integer id){
+        // エラー処理
+        if (result.hasErrors()){
+            ModelAndView mav = new ModelAndView();
+            // 画面遷移先を指定
+            mav.setViewName("/top");
+            // 投稿データオブジェクトを保管
+            mav.addObject("formModel", commentForm);
+
+            List<ReportForm> contentData = reportService.findAllReport();
+            List<CommentForm> commentData = commentService.findAllComment();
+            mav.addObject("contents", contentData);
+            mav.addObject("comments", commentData);
+
+            StringBuilder errorMessages = new StringBuilder();
+            for (FieldError error : result.getFieldErrors()) {
+                errorMessages.append(error.getDefaultMessage());
+            }
+            mav.addObject("errorMessages", errorMessages);
+            mav.addObject("reportID", id);
+            return mav;
+        }
+
         // オブジェクトに返信対象のID情報を付与
         commentForm.setContent_id(id);
         // オブジェクトに現在時刻の情報を付与
@@ -168,8 +218,26 @@ public class ForumController {
      * コメント編集処理
      */
     @PutMapping("/update_comment/{id}")
-    public ModelAndView updateCommentContent(@ModelAttribute("formModel") CommentForm commentForm,
-                                             @PathVariable("id") Integer id){
+    public ModelAndView updateCommentContent(@ModelAttribute("formModel") @Validated CommentForm commentForm,
+                                             BindingResult result, @PathVariable("id") Integer id){
+        // エラー処理
+        if (result.hasErrors()){
+            ModelAndView mav = new ModelAndView();
+            // 対象のコメントを取得
+            CommentForm comment = commentService.findComment(id);
+            // 画面遷移先を指定
+            mav.setViewName("/edit_comment");
+            // コメントデータオブジェクトを保管
+            mav.addObject("formModel", comment);
+
+            StringBuilder errorMessages = new StringBuilder();
+            for (FieldError error : result.getFieldErrors()) {
+                errorMessages.append(error.getDefaultMessage());
+            }
+            mav.addObject("errorMessages", errorMessages);
+            return mav;
+        }
+
         // オブジェクトにID情報を付与
         commentForm.setId(id);
         // 更新時刻の情報を変更

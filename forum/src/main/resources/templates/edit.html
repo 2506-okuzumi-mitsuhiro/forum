@@ -13,6 +13,9 @@
     <form th:method="put" th:action="@{/update/{id}(id=${formModel.id})}" th:object="${formModel}">
         <div class="form-area">
             <label>投稿内容</label>
+            <div class="errorMessages" th:each="errors : ${errorMessages}">
+                <span th:text="${errors}"/>
+            </div>
             <textarea class="tweet-box" th:field="*{content}" size="20" maxlength="200" /></textarea><br/>
             <input type="submit" value="更新" />
         </div>
