@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.forum.mapper.CommentMapper">
+    <resultMap id="SelectResult" type="com.example.forum.repository.entity.Comment">
+        <result column="id" property="id" />
+        <result column="comment" property="comment" />
+        <result column="content_id" property="content_id" />
+        <result column="created_date" property="created_date" />
+        <result column="updated_date" property="updated_date" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="SelectResult">
+        SELECT * FROM comments
+    </select>
+
+    <select id="selectById" resultMap="SelectResult" parameterType="Integer">
+        SELECT * FROM comments
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.forum.repository.entity.Comment">
+        INSERT INTO comments(comment, content_id)
+        VALUES(#{comment}, #{content_id})
+    </insert>
+
+    <update id="update" parameterType="com.example.forum.repository.entity.Comment">
+        UPDATE comments
+        SET comment = #{comment}, content_id = #{content_id}, updated_date = #{updated_date}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM comments
+        WHERE id = #{id}
+    </delete>
+</mapper>

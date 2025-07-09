@@ -1,6 +1,7 @@
 package com.example.forum.service;
 
 import com.example.forum.controller.form.CommentForm;
+import com.example.forum.mapper.CommentMapper;
 import com.example.forum.repository.CommentRepository;
 import com.example.forum.repository.entity.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,15 @@ public class CommentService {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    CommentMapper commentMapper;
+
     /*
      * レコード全件取得処理
      */
     public List<CommentForm> findAllComment() {
-        List<Comment> results = commentRepository.findAll();
+//        List<Comment> results = commentRepository.findAll();
+        List<Comment> results = commentMapper.selectAll();
         List<CommentForm> comments = setCommentForm(results);
         return comments;
     }
@@ -45,7 +50,13 @@ public class CommentService {
      */
     public void saveComment(CommentForm reqComment) {
         Comment saveComment = setCommentEntity(reqComment);
-        commentRepository.save(saveComment);
+//        commentRepository.save(saveComment);
+
+        if (saveComment.getId() == 0){
+            commentMapper.insert(saveComment);
+        }else {
+            commentMapper.update(saveComment);
+        }
     }
 
     /*
@@ -65,7 +76,8 @@ public class CommentService {
      */
     public CommentForm findComment(Integer id) {
         List<Comment> results = new ArrayList<>();
-        results.add((Comment) commentRepository.findById(id).orElse(null));
+//        results.add((Comment) commentRepository.findById(id).orElse(null));
+        results.add((Comment) commentMapper.selectById(id));
         List<CommentForm> comments = setCommentForm(results);
         return comments.get(0);
     }
@@ -74,6 +86,7 @@ public class CommentService {
      * レコード削除
      */
     public void deleteComment(Integer id) {
-        commentRepository.deleteById(id);
+//        commentRepository.deleteById(id);
+        commentMapper.delete(id);
     }
 }

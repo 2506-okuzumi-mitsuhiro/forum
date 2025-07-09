@@ -182,6 +182,8 @@ public class ForumController {
             return mav;
         }
 
+        // 新規コメントのフラグとしてIDをリセット
+        commentForm.setId(0);
         // オブジェクトに返信対象のID情報を付与
         commentForm.setContent_id(id);
         // オブジェクトに現在時刻の情報を付与
