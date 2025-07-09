@@ -8,12 +8,36 @@
         <result column="created_date" property="createdDate" />
         <result column="updated_date" property="updatedDate" />
     </resultMap>
+
     <select id="selectAll" resultMap="SelectResult">
         SELECT * FROM report ORDER BY updated_date DESC
+    </select>
+
+    <select id="selectByUpdatedDate" resultMap="SelectResult" parameterType="java.sql.Timestamp">
+        SELECT * FROM report
+        WHERE updated_date
+        BETWEEN #{startDate} AND #{endDate}
+        ORDER BY updated_date DESC
     </select>
 
     <select id="selectById" resultMap="SelectResult" parameterType="Integer">
         SELECT * FROM report
         WHERE id = #{id}
     </select>
+
+    <insert id="insert" parameterType="com.example.forum.repository.entity.Report">
+        INSERT INTO report(content)
+        VALUES(#{content})
+    </insert>
+
+    <update id="update" parameterType="com.example.forum.repository.entity.Report">
+        UPDATE report
+        SET content = #{content}, updated_date = #{updatedDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM report
+        WHERE id = #{id}
+    </delete>
 </mapper>

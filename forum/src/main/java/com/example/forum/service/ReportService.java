@@ -59,8 +59,8 @@ public class ReportService {
 
         endDate = new Timestamp(dateEnd.getTime());
 
-        List<Report> results = reportRepository.findAllByUpdatedDateBetweenOrderByUpdatedDateDesc(startDate, endDate);
-//        List<Report> results = reportMapper.selectByUpdatedDate(startDate, endDate);
+//        List<Report> results = reportRepository.findAllByUpdatedDateBetweenOrderByUpdatedDateDesc(startDate, endDate);
+        List<Report> results = reportMapper.selectByUpdatedDate(startDate, endDate);
         List<ReportForm> reports = setReportForm(results);
         return reports;
     }
@@ -86,7 +86,13 @@ public class ReportService {
      */
     public void saveReport(ReportForm reqReport) {
         Report saveReport = setReportEntity(reqReport);
-        reportRepository.save(saveReport);
+//        reportRepository.save(saveReport);
+
+        if (saveReport.getId() == 0){
+            reportMapper.insert(saveReport);
+        }else {
+            reportMapper.update(saveReport);
+        }
     }
 
     /*
@@ -104,7 +110,8 @@ public class ReportService {
      * レコード削除
      */
     public void deleteReport(Integer id) {
-        reportRepository.deleteById(id);
+//        reportRepository.deleteById(id);
+        reportMapper.delete(id);
     }
 
     /*
