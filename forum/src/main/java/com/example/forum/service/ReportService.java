@@ -1,6 +1,7 @@
 package com.example.forum.service;
 
 import com.example.forum.controller.form.ReportForm;
+import com.example.forum.mapper.ReportMapper;
 import com.example.forum.repository.ReportRepository;
 import com.example.forum.repository.entity.Report;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,15 @@ public class ReportService {
     @Autowired
     ReportRepository reportRepository;
 
+    @Autowired
+    ReportMapper reportMapper;
+
     /*
      * レコード全件取得処理
      */
     public List<ReportForm> findAllReport() {
-        List<Report> results = reportRepository.findAllByOrderByUpdatedDateDesc();
+//        List<Report> results = reportRepository.findAllByOrderByUpdatedDateDesc();
+        List<Report> results = reportMapper.selectAll();
         List<ReportForm> reports = setReportForm(results);
         return reports;
     }
@@ -55,6 +60,7 @@ public class ReportService {
         endDate = new Timestamp(dateEnd.getTime());
 
         List<Report> results = reportRepository.findAllByUpdatedDateBetweenOrderByUpdatedDateDesc(startDate, endDate);
+//        List<Report> results = reportMapper.selectByUpdatedDate(startDate, endDate);
         List<ReportForm> reports = setReportForm(results);
         return reports;
     }
@@ -106,7 +112,8 @@ public class ReportService {
      */
     public ReportForm findReport(Integer id) {
         List<Report> results = new ArrayList<>();
-        results.add((Report) reportRepository.findById(id).orElse(null));
+//        results.add((Report) reportRepository.findById(id).orElse(null));
+        results.add((Report) reportMapper.selectById(id));
         List<ReportForm> reports = setReportForm(results);
         return reports.get(0);
     }
